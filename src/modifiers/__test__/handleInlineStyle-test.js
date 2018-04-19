@@ -107,7 +107,7 @@ describe("handleInlineStyle", () => {
       }),
     },
 
-    "converts to bold with astarisks": {
+    "converts to bold with asterisks": {
       before: {
         entityMap: {},
         blocks: [
@@ -151,7 +151,52 @@ describe("handleInlineStyle", () => {
         hasFocus: true,
       }),
     },
-    "converts semicolons to bold with astarisks": {
+    "converts to bold with asterisks on non-space character": {
+      before: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello **inline** style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      after: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello inlinea style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+              {
+                length: 6,
+                offset: 6,
+                style: "BOLD",
+              },
+            ],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      selection: new SelectionState({
+        anchorKey: "item1",
+        anchorOffset: 16,
+        focusKey: "item1",
+        focusOffset: 16,
+        isBackward: false,
+        hasFocus: true,
+      }),
+      character: "a",
+    },
+    "converts semicolons to bold with asterisks": {
       before: {
         entityMap: {},
         blocks: [
@@ -327,7 +372,7 @@ describe("handleInlineStyle", () => {
         hasFocus: true,
       }),
     },
-    "combines to italic and bold with astarisks": {
+    "combines to italic and bold with asterisks": {
       before: {
         entityMap: {},
         blocks: [
@@ -425,6 +470,51 @@ describe("handleInlineStyle", () => {
         isBackward: false,
         hasFocus: true,
       }),
+    },
+    "converts to code with backquote when pressing a non-space character": {
+      before: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello `inline` style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      after: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello inlinea style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+              {
+                length: 6,
+                offset: 6,
+                style: "CODE",
+              },
+            ],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      selection: new SelectionState({
+        anchorKey: "item1",
+        anchorOffset: 14,
+        focusKey: "item1",
+        focusOffset: 14,
+        isBackward: false,
+        hasFocus: true,
+      }),
+      character: "a",
     },
     "converts to strikethrough with tildes": {
       before: {
