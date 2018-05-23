@@ -1,6 +1,6 @@
 {
   "name": "draft-js-markdown-plugin",
-  "version": "2.0.2",
+  "version": "2.0.3-0",
   "description": "A DraftJS plugin for supporting Markdown syntax shortcuts, fork of draft-js-markdown-shortcuts-plugin",
   "main": "lib/index.js",
   "scripts": {
@@ -106,7 +106,6 @@
     "draft-js": "^0.10.4",
     "draft-js-checkable-list-item": "^2.0.5",
     "draft-js-prism-plugin": "^0.1.1",
-    "immutable": "~3.7.4",
-    "react-click-outside": "^3.0.1"
+    "immutable": "~3.7.4"
   }
 }
