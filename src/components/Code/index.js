@@ -1,28 +1,21 @@
 import React, { PureComponent } from "react";
 import { Map } from "immutable";
 import { EditorState, EditorBlock, Modifier } from "draft-js";
-import enhanceWithClickOutside from "react-click-outside";
 
 const alias = {
   javascript: "js",
   jsx: "js",
 };
 
-const CodeSwitchContainer = enhanceWithClickOutside(
-  class SwitchContainer extends PureComponent {
-    handleClickOutside() {
-      this.props.onClickOutside();
-    }
-
-    render() {
-      return (
-        <div contentEditable={false} onClick={this.props.onClick}>
-          {this.props.children}
-        </div>
-      );
-    }
+class CodeSwitchContainer extends PureComponent {
+  render() {
+    return (
+      <div contentEditable={false} onClick={this.props.onClick}>
+        {this.props.children}
+      </div>
+    );
   }
-);
+}
 
 class CodeBlock extends PureComponent {
   state = {
@@ -75,27 +68,6 @@ class CodeBlock extends PureComponent {
     });
   };
 
-  onClickOutside = () => {
-    if (!this.state.isOpen) {
-      return;
-    }
-    this.setState({
-      isOpen: false,
-    });
-    const {
-      getEditorState,
-      setReadOnly,
-      setEditorState,
-    } = this.props.blockProps;
-
-    setReadOnly(false);
-
-    const editorState = getEditorState();
-    const selection = editorState.getSelection();
-
-    setEditorState(EditorState.forceSelection(editorState, selection));
-  };
-
   render() {
     const {
       languages,
@@ -121,10 +93,7 @@ class CodeBlock extends PureComponent {
     return (
       <div>
         <EditorBlock {...this.props} />
-        <CodeSwitchContainer
-          onClickOutside={this.onClickOutside}
-          onClick={this.onSelectClick}
-        >
+        <CodeSwitchContainer onClick={this.onSelectClick}>
           {renderLanguageSelect({
             selectedLabel,
             selectedValue,
