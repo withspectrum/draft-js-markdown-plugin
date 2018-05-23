@@ -18,10 +18,6 @@ class CodeSwitchContainer extends PureComponent {
 }
 
 class CodeBlock extends PureComponent {
-  state = {
-    isOpen: false,
-  };
-
   onChange = ev => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -57,15 +53,8 @@ class CodeBlock extends PureComponent {
     setEditorState(EditorState.forceSelection(newEditorState, selection));
   };
 
-  cancelClicks = event => event.preventDefault();
-
   onSelectClick = event => {
-    const { setReadOnly } = this.props.blockProps;
     event.stopPropagation();
-    setReadOnly(true);
-    this.setState({
-      isOpen: true,
-    });
   };
 
   render() {
