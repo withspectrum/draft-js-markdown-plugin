@@ -80,24 +80,7 @@ describe("markdown", () => {
   it("should convert asteriks to bold text", () => {
     const { handleBeforeInput } = createMarkdownPlugin();
     const setEditorState = jest.fn();
-    const before = EditorState.moveSelectionToEnd(
-      EditorState.createWithContent(
-        Draft.convertFromRaw({
-          entityMap: {},
-          blocks: [
-            {
-              key: "item1",
-              text: "Some *text",
-              type: "unstyled",
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [],
-              data: {},
-            },
-          ],
-        })
-      )
-    );
+    const before = textToEditorState`Some *text`;
     expect(handleBeforeInput("*", before, { setEditorState })).toEqual(
       "handled"
     );

@@ -14,7 +14,7 @@ Object {
           "style": "BOLD",
         },
       ],
-      "key": "item1",
+      "key": "block-0",
       "text": "Some text",
       "type": "unstyled",
     },
