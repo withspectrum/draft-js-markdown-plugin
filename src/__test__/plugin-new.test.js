@@ -7,14 +7,57 @@ import Draft, {
 } from "draft-js";
 import createMarkdownPlugin from "../";
 
-const textToEditorState = (strings, ...interpolations) => {
-  const contentState = ContentState.createFromText(strings.join(""));
-  return EditorState.createWithContent(contentState);
+const predictableKeys = editorState => {
+  const content = editorState.getCurrentContent();
+  const selection = editorState.getSelection();
+  let newSelection = selection;
+  const blocks = content.getBlockMap();
+  const newBlocks = blocks.mapEntries(([key, block], index) => {
+    const newKey = `block-${index.toString(32)}`;
+    if (newSelection.anchorKey === key) {
+      newSelection = newSelection.set("anchorKey", newKey);
+    }
+    if (newSelection.focusKey === key) {
+      newSelection = newSelection.set("focusKey", newKey);
+    }
+    return [newKey, block.set("key", newKey)];
+  });
+  return EditorState.create({
+    allowUndo: editorState.allowUndo,
+    currentContent: ContentState.createFromBlockArray(newBlocks.toArray()),
+    selection: newSelection,
+    decorator: editorState.decorator,
+  });
 };
 
-describe.only("textToEditorState", () => {
+const textToEditorState = (strings, ...interpolations) => {
+  const contentState = ContentState.createFromText(strings.join(""));
+  const randomKeysEditorState = EditorState.createWithContent(contentState);
+  const editorState = predictableKeys(randomKeysEditorState);
+  return EditorState.moveSelectionToEnd(editorState);
+};
+
+describe("textToEditorState", () => {
   it("should return DraftJS EditorState", () => {
     expect(textToEditorState`some text`).toBeInstanceOf(EditorState);
+  });
+
+  it("should have the text passed to textToEditorState", () => {
+    expect(
+      textToEditorState`some text`.getCurrentContent().getPlainText()
+    ).toEqual("some text");
+  });
+
+  it("should have predictable block keys", () => {
+    expect(
+      convertToRaw(textToEditorState`some text`.getCurrentContent())
+    ).toMatchSnapshot();
+  });
+
+  it("should have the selection at the end by default", () => {
+    expect(textToEditorState`some text`.getSelection().serialize()).toEqual(
+      "Anchor: block-0:9, Focus: block-0:9, Is Backward: false, Has Focus: false"
+    );
   });
 });
 

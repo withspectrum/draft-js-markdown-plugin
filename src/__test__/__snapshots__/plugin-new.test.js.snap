@@ -45,3 +45,20 @@ Object {
   "entityMap": Object {},
 }
 `;
+
+exports[`textToEditorState should have predictable block keys 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [],
+      "key": "block-0",
+      "text": "some text",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {},
+}
+`;
