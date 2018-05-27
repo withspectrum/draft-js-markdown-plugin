@@ -34,7 +34,16 @@ const textToEditorState = (strings, ...interpolations) => {
   const contentState = ContentState.createFromText(strings.join(""));
   const randomKeysEditorState = EditorState.createWithContent(contentState);
   const editorState = predictableKeys(randomKeysEditorState);
-  return EditorState.moveSelectionToEnd(editorState);
+  const plain = contentState.getPlainText();
+  const selectionIndex =
+    plain.indexOf("|") > -1 ? plain.indexOf("|") : plain.length;
+  return EditorState.forceSelection(
+    editorState,
+    editorState.getSelection().merge({
+      anchorOffset: selectionIndex,
+      focusOffset: selectionIndex,
+    })
+  );
 };
 
 describe("textToEditorState", () => {
@@ -56,7 +65,13 @@ describe("textToEditorState", () => {
 
   it("should have the selection at the end by default", () => {
     expect(textToEditorState`some text`.getSelection().serialize()).toEqual(
-      "Anchor: block-0:9, Focus: block-0:9, Is Backward: false, Has Focus: false"
+      "Anchor: block-0:9, Focus: block-0:9, Is Backward: false, Has Focus: true"
+    );
+  });
+
+  it("should allow you to move the selection with |", () => {
+    expect(textToEditorState`some| text`.getSelection().serialize()).toEqual(
+      "Anchor: block-0:4, Focus: block-0:4, Is Backward: false, Has Focus: true"
     );
   });
 });
