@@ -1,10 +1,22 @@
 import Draft, {
+  ContentState,
   EditorState,
   SelectionState,
   ContentBlock,
   convertToRaw,
 } from "draft-js";
 import createMarkdownPlugin from "../";
+
+const textToEditorState = (strings, ...interpolations) => {
+  const contentState = ContentState.createFromText(strings.join(""));
+  return EditorState.createWithContent(contentState);
+};
+
+describe.only("textToEditorState", () => {
+  it("should return DraftJS EditorState", () => {
+    expect(textToEditorState`some text`).toBeInstanceOf(EditorState);
+  });
+});
 
 describe("markdown", () => {
   it("should convert asteriks to bold text", () => {
