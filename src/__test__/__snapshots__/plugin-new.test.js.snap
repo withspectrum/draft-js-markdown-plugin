@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`markdown should convert asteriks to bold text 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [
+        Object {
+          "length": 4,
+          "offset": 5,
+          "style": "BOLD",
+        },
+      ],
+      "key": "item1",
+      "text": "Some text",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {},
+}
+`;
+
+exports[`markdown should not have sticky inline styles 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [
+        Object {
+          "length": 4,
+          "offset": 5,
+          "style": "BOLD",
+        },
+      ],
+      "key": "item1",
+      "text": "Some texta",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {},
+}
+`;
