@@ -419,7 +419,7 @@ const createMarkdownPlugin = (_config = {}) => {
       let newEditorState = editorState;
       let buffer = [];
 
-      if (html) {
+      if (html || !text) {
         return "not-handled";
       }
 
