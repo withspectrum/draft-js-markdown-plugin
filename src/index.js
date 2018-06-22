@@ -131,7 +131,8 @@ function checkCharacterForState(config, editorState, character) {
     newEditorState = handleInlineStyle(
       config.features.inline,
       editorState,
-      character
+      character,
+      config.customInlineMatchers
     );
   }
   return newEditorState;
