@@ -416,64 +416,6 @@ const createMarkdownPlugin = (_config = {}) => {
         }
       }
     },
-    handlePastedText(text, html, editorState, { setEditorState }) {
-      let newEditorState = editorState;
-      let buffer = [];
-
-      if (html) {
-        return "not-handled";
-      }
-
-      // If we're in a code block don't add markdown to it
-      if (inCodeBlock(editorState)) {
-        setEditorState(insertText(editorState, text));
-        return "handled";
-      }
-
-      for (let i = 0; i < text.length; i++) {
-        // eslint-disable-line no-plusplus
-        if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
-          newEditorState = replaceText(
-            newEditorState,
-            buffer.join("") + text[i]
-          );
-          newEditorState = checkCharacterForState(
-            config,
-            newEditorState,
-            text[i]
-          );
-          buffer = [];
-        } else if (text[i].charCodeAt(0) === 10) {
-          newEditorState = replaceText(newEditorState, buffer.join(""));
-          const tmpEditorState = checkReturnForState(
-            config,
-            newEditorState,
-            {}
-          );
-          if (newEditorState === tmpEditorState) {
-            newEditorState = insertEmptyBlock(tmpEditorState);
-          } else {
-            newEditorState = tmpEditorState;
-          }
-          buffer = [];
-        } else if (i === text.length - 1) {
-          newEditorState = replaceText(
-            newEditorState,
-            buffer.join("") + text[i]
-          );
-          buffer = [];
-        } else {
-          buffer.push(text[i]);
-        }
-      }
-
-      if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
-        return "handled";
-      }
-
-      return "not-handled";
-    },
   };
 };
 
