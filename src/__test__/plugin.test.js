@@ -542,7 +542,8 @@ describe("draft-js-markdown-plugin", () => {
               expect(modifierSpy).toHaveBeenCalledWith(
                 defaultInlineWhitelist,
                 currentEditorState,
-                " "
+                " ",
+                undefined
               );
             });
             it("unstickys inline style", () => {

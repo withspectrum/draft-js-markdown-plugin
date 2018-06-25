@@ -4,12 +4,14 @@ import { inlineMatchers } from "../constants";
 import insertText from "./insertText";
 import { getCurrentLine as getLine } from "../utils";
 
-const handleChange = (editorState, line, whitelist) => {
+const handleChange = (editorState, line, whitelist, customInlineMatchers) => {
   let newEditorState = editorState;
-  Object.keys(inlineMatchers)
+  const matchers = Object.assign({}, inlineMatchers, customInlineMatchers);
+
+  Object.keys(matchers)
     .filter(matcher => whitelist.includes(matcher))
     .some(k => {
-      inlineMatchers[k].some(re => {
+      matchers[k].some(re => {
         let matchArr;
         do {
           matchArr = re.exec(line);
@@ -31,19 +33,30 @@ const handleChange = (editorState, line, whitelist) => {
 const handleInlineStyle = (
   whitelist,
   editorStateWithoutCharacter,
-  character
+  character,
+  customInlineMatchers = {}
 ) => {
   const editorState = insertText(editorStateWithoutCharacter, character);
   let selection = editorState.getSelection();
   let line = getLine(editorState);
-  let newEditorState = handleChange(editorState, line, whitelist);
+  let newEditorState = handleChange(
+    editorState,
+    line,
+    whitelist,
+    customInlineMatchers
+  );
   let lastEditorState = editorState;
 
   // Recursively resolve markdown, e.g. _*text*_ should turn into both italic and bold
   while (newEditorState !== lastEditorState) {
     lastEditorState = newEditorState;
     line = getLine(newEditorState);
-    newEditorState = handleChange(newEditorState, line, whitelist);
+    newEditorState = handleChange(
+      newEditorState,
+      line,
+      whitelist,
+      customInlineMatchers
+    );
   }
 
   if (newEditorState !== editorState) {
