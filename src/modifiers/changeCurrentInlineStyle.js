@@ -1,5 +1,6 @@
 import { OrderedSet } from "immutable";
 import { EditorState, SelectionState, Modifier } from "draft-js";
+import removeInlineStyles from "./removeInlineStyles";
 
 const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const currentContent = editorState.getCurrentContent();
@@ -8,8 +9,12 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const { index } = matchArr;
   const blockMap = currentContent.getBlockMap();
   const block = blockMap.get(key);
-  const currentInlineStyle = block.getInlineStyleAt(index).merge();
-  const newStyle = currentInlineStyle.merge([style]);
+  const currentInlineStyle = block.getInlineStyleAt(index);
+  // do not modify the text if it is inside code style
+  const hasCodeStyle = currentInlineStyle.find(style => style === "CODE");
+  if (hasCodeStyle) {
+    return editorState;
+  }
   const focusOffset = index + matchArr[0].length;
 
   const wordSelection = SelectionState.createEmpty(key).merge({
@@ -17,10 +22,15 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
     focusOffset,
   });
 
-  const inlineStyles = [];
+  let newEditorState = editorState;
+  // remove all styles if applying code style
+  if (style === "CODE") {
+    newEditorState = removeInlineStyles(newEditorState, wordSelection);
+  }
+
   const markdownCharacterLength = (matchArr[0].length - matchArr[1].length) / 2;
 
-  let newContentState = currentContent;
+  let newContentState = newEditorState.getCurrentContent();
 
   // remove markdown delimiter at end
   newContentState = Modifier.removeRange(
@@ -55,7 +65,7 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
     style
   );
 
-  const newEditorState = EditorState.push(
+  newEditorState = EditorState.push(
     editorState,
     newContentState,
     "change-inline-style"
