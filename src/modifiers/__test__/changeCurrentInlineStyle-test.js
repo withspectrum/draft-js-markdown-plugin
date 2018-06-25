@@ -44,17 +44,36 @@ describe("changeCurrentInlineStyle", () => {
     );
     expect(newEditorState).not.toEqual(editorState);
     expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
-      rawContentState(
-        "foo bar baz",
-        [
-          {
-            length: 3,
-            offset: 4,
-            style: "CODE",
-          },
-        ],
-        "CODE"
-      )
+      rawContentState("foo bar baz", [
+        {
+          length: 3,
+          offset: 4,
+          style: "CODE",
+        },
+      ])
+    );
+  });
+  it("removes inline styles when applying code style", () => {
+    const text = "`some bold text`";
+    const editorState = createEditorState(text, [
+      {
+        length: 4,
+        offset: 6,
+        style: "BOLD",
+      },
+    ]);
+    const matchArr = ["`some bold text`", "some bold text"];
+    matchArr.index = 0;
+    matchArr.input = text;
+    let newEditorState = changeCurrentInlineStyle(
+      editorState,
+      matchArr,
+      "CODE"
+    );
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+      rawContentState("some bold text", [
+        { length: 14, offset: 0, style: "CODE" },
+      ])
     );
   });
   it("handles a style terminator properly", () => {
