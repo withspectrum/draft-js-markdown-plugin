@@ -23,6 +23,7 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   });
 
   let newEditorState = editorState;
+
   // remove all styles if applying code style
   if (style === "CODE") {
     newEditorState = removeInlineStyles(newEditorState, wordSelection);
