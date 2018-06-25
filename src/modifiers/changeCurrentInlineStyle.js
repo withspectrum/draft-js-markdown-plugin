@@ -17,16 +17,26 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
     focusOffset,
   });
 
-  const inlineStyles = [];
-  const markdownCharacterLength = (matchArr[0].length - matchArr[1].length) / 2;
+  // check if match contains a terminator group at the end
+  let matchTerminatorLength = 0;
+  if (matchArr.length == 3) {
+    matchTerminatorLength = matchArr[2].length;
+  }
 
+  const markdownCharacterLength =
+    (matchArr[0].length - matchArr[1].length - matchTerminatorLength) / 2;
+
+  const inlineStyles = [];
   let newContentState = currentContent;
 
   // remove markdown delimiter at end
   newContentState = Modifier.removeRange(
     newContentState,
     wordSelection.merge({
-      anchorOffset: wordSelection.getFocusOffset() - markdownCharacterLength,
+      anchorOffset:
+        wordSelection.getFocusOffset() -
+        markdownCharacterLength -
+        matchTerminatorLength,
     })
   );
 
@@ -50,10 +60,21 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
     newContentState,
     wordSelection.merge({
       anchorOffset: index,
-      focusOffset: focusOffset - markdownCharacterLength * 2,
+      focusOffset:
+        focusOffset - markdownCharacterLength * 2 - matchTerminatorLength,
     }),
     style
   );
+
+  // Check if a terminator exists and re-add it after the styled text
+  if (matchTerminatorLength > 0) {
+    newContentState = Modifier.insertText(
+      newContentState,
+      afterSelection,
+      matchArr[2]
+    );
+    afterSelection = newContentState.getSelectionAfter();
+  }
 
   const newEditorState = EditorState.push(
     editorState,

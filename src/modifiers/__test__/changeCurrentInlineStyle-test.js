@@ -57,4 +57,30 @@ describe("changeCurrentInlineStyle", () => {
       )
     );
   });
+  it("handles a style terminator properly", () => {
+    const text = "foo **bar** baz";
+    const editorState = createEditorState(text, []);
+    const matchArr = ["**bar** ", "bar", " "];
+    matchArr.index = 4;
+    matchArr.input = text;
+    const newEditorState = changeCurrentInlineStyle(
+      editorState,
+      matchArr,
+      "BOLD"
+    );
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+      rawContentState(
+        "foo bar baz",
+        [
+          {
+            length: 3,
+            offset: 4,
+            style: "BOLD",
+          },
+        ],
+        "BOLD"
+      )
+    );
+  });
 });
