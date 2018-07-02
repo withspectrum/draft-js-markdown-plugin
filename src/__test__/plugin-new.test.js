@@ -1,4 +1,5 @@
 import Draft, {
+  ContentState,
   EditorState,
   SelectionState,
   ContentBlock,
@@ -6,28 +7,80 @@ import Draft, {
 } from "draft-js";
 import createMarkdownPlugin from "../";
 
+const predictableKeys = editorState => {
+  const content = editorState.getCurrentContent();
+  const selection = editorState.getSelection();
+  let newSelection = selection;
+  const blocks = content.getBlockMap();
+  const newBlocks = blocks.mapEntries(([key, block], index) => {
+    const newKey = `block-${index.toString(32)}`;
+    if (newSelection.anchorKey === key) {
+      newSelection = newSelection.set("anchorKey", newKey);
+    }
+    if (newSelection.focusKey === key) {
+      newSelection = newSelection.set("focusKey", newKey);
+    }
+    return [newKey, block.set("key", newKey)];
+  });
+  return EditorState.create({
+    allowUndo: editorState.allowUndo,
+    currentContent: ContentState.createFromBlockArray(newBlocks.toArray()),
+    selection: newSelection,
+    decorator: editorState.decorator,
+  });
+};
+
+const textToEditorState = (strings, ...interpolations) => {
+  const contentState = ContentState.createFromText(strings.join(""));
+  const randomKeysEditorState = EditorState.createWithContent(contentState);
+  const editorState = predictableKeys(randomKeysEditorState);
+  const plain = contentState.getPlainText();
+  const selectionIndex =
+    plain.indexOf("|") > -1 ? plain.indexOf("|") : plain.length;
+  return EditorState.forceSelection(
+    editorState,
+    editorState.getSelection().merge({
+      anchorOffset: selectionIndex,
+      focusOffset: selectionIndex,
+    })
+  );
+};
+
+describe("textToEditorState", () => {
+  it("should return DraftJS EditorState", () => {
+    expect(textToEditorState`some text`).toBeInstanceOf(EditorState);
+  });
+
+  it("should have the text passed to textToEditorState", () => {
+    expect(
+      textToEditorState`some text`.getCurrentContent().getPlainText()
+    ).toEqual("some text");
+  });
+
+  it("should have predictable block keys", () => {
+    expect(
+      convertToRaw(textToEditorState`some text`.getCurrentContent())
+    ).toMatchSnapshot();
+  });
+
+  it("should have the selection at the end by default", () => {
+    expect(textToEditorState`some text`.getSelection().serialize()).toEqual(
+      "Anchor: block-0:9, Focus: block-0:9, Is Backward: false, Has Focus: true"
+    );
+  });
+
+  it("should allow you to move the selection with |", () => {
+    expect(textToEditorState`some| text`.getSelection().serialize()).toEqual(
+      "Anchor: block-0:4, Focus: block-0:4, Is Backward: false, Has Focus: true"
+    );
+  });
+});
+
 describe("markdown", () => {
   it("should convert asteriks to bold text", () => {
     const { handleBeforeInput } = createMarkdownPlugin();
     const setEditorState = jest.fn();
-    const before = EditorState.moveSelectionToEnd(
-      EditorState.createWithContent(
-        Draft.convertFromRaw({
-          entityMap: {},
-          blocks: [
-            {
-              key: "item1",
-              text: "Some *text",
-              type: "unstyled",
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [],
-              data: {},
-            },
-          ],
-        })
-      )
-    );
+    const before = textToEditorState`Some *text`;
     expect(handleBeforeInput("*", before, { setEditorState })).toEqual(
       "handled"
     );
