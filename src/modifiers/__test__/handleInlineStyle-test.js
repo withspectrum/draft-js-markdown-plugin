@@ -47,7 +47,51 @@ describe("handleInlineStyle", () => {
   });
 
   const testCases = {
-    "converts a mix of code, bold and italic and strikethrough in one go": {
+    "converts a mix of bold and italic and strikethrough in one go": {
+      character: "*",
+      before: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "*h~ello _inline~_ style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      after: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello inline style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+              { length: 12, offset: 0, style: "BOLD" },
+              { length: 11, offset: 1, style: "STRIKETHROUGH" },
+              { length: 6, offset: 6, style: "ITALIC" },
+            ],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      selection: new SelectionState({
+        anchorKey: "item1",
+        anchorOffset: 17,
+        focusKey: "item1",
+        focusOffset: 17,
+        isBackward: false,
+        hasFocus: true,
+      }),
+    },
+
+    "should not covert inside the code style": {
       character: "`",
       before: {
         entityMap: {},
@@ -68,31 +112,10 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline style",
+            text: "h~el*lo _inline~_* style",
             type: "unstyled",
             depth: 0,
-            inlineStyleRanges: [
-              {
-                length: 12,
-                offset: 0,
-                style: "CODE",
-              },
-              {
-                length: 11,
-                offset: 1,
-                style: "STRIKETHROUGH",
-              },
-              {
-                length: 9,
-                offset: 3,
-                style: "BOLD",
-              },
-              {
-                length: 6,
-                offset: 6,
-                style: "ITALIC",
-              },
-            ],
+            inlineStyleRanges: [{ length: 18, offset: 0, style: "CODE" }],
             entityRanges: [],
             data: {},
           },
