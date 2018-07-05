@@ -40,8 +40,6 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const markdownCharacterLength =
     (matchArr[0].length - matchArr[1].length - matchTerminatorLength) / 2;
 
-  newContentState = currentContent;
-
   // remove markdown delimiter at end
   newContentState = Modifier.removeRange(
     newContentState,
