@@ -54,7 +54,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "*h~ello _inline~_ style",
+            text: "*~hello _inline~_ style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -73,7 +73,7 @@ describe("handleInlineStyle", () => {
             depth: 0,
             inlineStyleRanges: [
               { length: 12, offset: 0, style: "BOLD" },
-              { length: 11, offset: 1, style: "STRIKETHROUGH" },
+              { length: 12, offset: 0, style: "STRIKETHROUGH" },
               { length: 6, offset: 6, style: "ITALIC" },
             ],
             entityRanges: [],
@@ -467,6 +467,48 @@ describe("handleInlineStyle", () => {
         anchorOffset: 13,
         focusKey: "item1",
         focusOffset: 13,
+        isBackward: false,
+        hasFocus: true,
+      }),
+    },
+    "does not convert markdown in the middle of the word": {
+      character: "*",
+      before: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "*h~ello _inline~_ style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      after: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "h~ello inline~ style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+              { length: 14, offset: 0, style: "BOLD" },
+              { length: 7, offset: 7, style: "ITALIC" },
+            ],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      selection: new SelectionState({
+        anchorKey: "item1",
+        anchorOffset: 17,
+        focusKey: "item1",
+        focusOffset: 17,
         isBackward: false,
         hasFocus: true,
       }),

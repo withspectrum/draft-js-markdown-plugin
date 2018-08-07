@@ -3,10 +3,10 @@ import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item";
 export const CODE_BLOCK_REGEX = /^```([\w-]+)?\s*$/;
 
 export const inlineMatchers = {
-  BOLD: [/\*(.+)\*$/g],
-  ITALIC: [/_(.+)_$/g],
-  CODE: [/`([^`]+)`$/g],
-  STRIKETHROUGH: [/~(.+)~$/g],
+  BOLD: [/(?:^|\s)\*(.+)\*$/g],
+  ITALIC: [/(?:^|\s)_(.+)_$/g],
+  CODE: [/(?:^|\s)`([^`]+)`$/g],
+  STRIKETHROUGH: [/(?:^|\s)~(.+)~$/g],
 };
 
 export const CODE_BLOCK_TYPE = "code-block";
