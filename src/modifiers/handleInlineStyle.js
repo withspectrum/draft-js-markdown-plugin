@@ -14,6 +14,10 @@ const handleChange = (editorState, line, whitelist) => {
         do {
           matchArr = re.exec(line);
           if (matchArr) {
+            if (matchArr[0][0].match(/^\s/)) {
+              matchArr[0] = matchArr[0].replace(/^\s/, "");
+              matchArr.index += 1;
+            }
             newEditorState = changeCurrentInlineStyle(
               newEditorState,
               matchArr,
