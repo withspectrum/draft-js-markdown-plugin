@@ -102,7 +102,7 @@
     "Atsushi Nagase <a@ngs.io>"
   ],
   "dependencies": {
-    "decorate-component-with-props": "^1.0.2",
+    "decorate-component-with-props": "^1.1.0",
     "draft-js": "^0.10.4",
     "draft-js-checkable-list-item": "^2.0.5",
     "draft-js-prism-plugin": "^0.1.1",
