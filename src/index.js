@@ -386,6 +386,14 @@ const createMarkdownPlugin = (_config = {}) => {
       }
       return "not-handled";
     },
+    handlePastedText(text, html, editorState, { setEditorState }) {
+      if (inCodeBlock(editorState)) {
+        setEditorState(insertText(editorState, text));
+        return "handled";
+      }
+
+      return "not-handled";
+    },
     handleKeyCommand(command, editorState, { setEditorState }) {
       switch (command) {
         case "backspace": {
