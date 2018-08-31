@@ -91,7 +91,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.12.2",
-    "webpack-hot-middleware": "^2.22.3"
+    "webpack-hot-middleware": "^2.23.0"
   },
   "peerDependencies": {
     "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
