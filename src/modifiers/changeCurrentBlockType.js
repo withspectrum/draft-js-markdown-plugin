@@ -32,13 +32,19 @@ const changeCurrentBlockType = (
   }
   const newBlock = startBlock.merge({ type, data, text, characterList });
 
+  // It seems that there is no way to get the right selectionAfter.
+  // Use the same trivial solution as the old version
   const startOffset = selection.getStartOffset();
+  var afterOffset = text.length;
+  if (startOffset < afterOffset) {
+    afterOffset = startOffset;
+  }
 
   selection = selection.merge({
     anchorKey: startKey,
     focusKey: startKey,
-    anchorOffset: startOffset,
-    focusOffset: startOffset,
+    anchorOffset: afterOffset,
+    focusOffset: afterOffset,
   });
 
   const newContentState = currentContent.merge({
