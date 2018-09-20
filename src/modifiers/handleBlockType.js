@@ -27,16 +27,14 @@ const handleBlockType = (whiteList, editorState, character) => {
   const startKey = currentSelection.getStartKey();
   const endKey = currentSelection.getEndKey();
   const startOffset = currentSelection.getStartOffset();
-  const endOffset = currentSelectino.getEndOffset();
-  const startText = currentContent
-    .getBlockForKey(startKey)
-    .getText();
-  const endText = currentContent
-    .getBlockForKey(endKey)
-    .getText()
-  const line = [startText.slice(0, startOffset),
-                character,
-                endText.slice(endOffset)].join("");
+  const endOffset = currentSelection.getEndOffset();
+  const startText = currentContent.getBlockForKey(startKey).getText();
+  const endText = currentContent.getBlockForKey(endKey).getText();
+  const line = [
+    startText.slice(0, startOffset),
+    character,
+    endText.slice(endOffset),
+  ].join("");
 
   const blockType = RichUtils.getCurrentBlockType(editorState);
 
