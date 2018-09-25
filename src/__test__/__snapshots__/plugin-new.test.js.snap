@@ -45,3 +45,35 @@ Object {
   "entityMap": Object {},
 }
 `;
+
+exports[`markdown should not have sticky inline styles after the line ending with styles 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [
+        Object {
+          "length": 4,
+          "offset": 5,
+          "style": "BOLD",
+        },
+      ],
+      "key": "item1",
+      "text": "Some text",
+      "type": "unstyled",
+    },
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [],
+      "key": "item2",
+      "text": "a",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {},
+}
+`
