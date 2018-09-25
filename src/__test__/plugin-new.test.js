@@ -111,4 +111,49 @@ describe("markdown", () => {
     expect(raw.blocks[0].inlineStyleRanges[0]).toEqual(boldInlineStyleRange);
     expect(raw).toMatchSnapshot();
   });
+
+  it("should not have sticky inline styles after the line ending with styles", () => {
+    const { handleBeforeInput } = createMarkdownPlugin();
+    const setEditorState = jest.fn();
+    const boldInlineStyleRange = {
+      length: 4,
+      offset: 5,
+      style: "BOLD",
+    };
+    const before = EditorState.moveSelectionToEnd(
+      EditorState.createWithContent(
+        Draft.convertFromRaw({
+          entityMap: {},
+          blocks: [
+            {
+              key: "item1",
+              text: "Some text",
+              type: "unstyled",
+              depth: 0,
+              inlineStyleRanges: [boldInlineStyleRange],
+              entityRanges: [],
+              data: {},
+            },
+            {
+              key: "item2",
+              text: "",
+              type: "unstyled",
+              depth: 0,
+              inlineStyleRanges: [],
+              entityRanges: [],
+              data: {},
+            },
+          ],
+        })
+      )
+    );
+    expect(handleBeforeInput("a", before, { setEditorState })).toEqual(
+      "handled"
+    );
+    const raw = convertToRaw(
+      setEditorState.mock.calls[0][0].getCurrentContent()
+    );
+    expect(raw.blocks[0].inlineStyleRanges[0]).toEqual(boldInlineStyleRange);
+    expect(raw).toMatchSnapshot();
+  });
 });

@@ -209,13 +209,22 @@ const unstickyInlineStyles = (character, editorState) => {
   const startOffset = selection.getStartOffset();
   const content = editorState.getCurrentContent();
   const block = content.getBlockForKey(selection.getStartKey());
+  const previousBlock = content.getBlockBefore(block.getKey());
   const entity = block.getEntityAt(startOffset - 1);
   if (entity !== null) return editorState;
 
   // If we're currently in a style, but the next character doesn't have a style (or doesn't exist)
   // we insert the characters manually without the inline style to "unsticky" them
-  const style = block.getInlineStyleAt(startOffset - 1);
-  if (style.size === 0) return editorState;
+  if (!startOffset && previousBlock) {
+    // If we're in the beginning of the line we have to check styles of the previous block
+    const previousBlockStyle = previousBlock.getInlineStyleAt(
+      previousBlock.getText().length - 1
+    );
+    if (previousBlockStyle.size === 0) return editorState;
+  } else {
+    const style = block.getInlineStyleAt(startOffset - 1);
+    if (style.size === 0) return editorState;
+  }
   const nextStyle = block.getInlineStyleAt(startOffset);
   if (nextStyle.size !== 0) return editorState;
 
