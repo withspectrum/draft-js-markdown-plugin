@@ -430,7 +430,7 @@ describe("draft-js-markdown-plugin", () => {
         afterEach(() => {
           CheckableListItemUtils.toggleChecked.mockRestore();
         });
-        it("returns renderer", () => {
+        it("returns renderer", async () => {
           type = "checkable-list-item";
           data = { checked: true };
           const renderer = subject();
@@ -438,7 +438,11 @@ describe("draft-js-markdown-plugin", () => {
           expect(renderer.component).toBe(CheckableListItem);
           expect(typeof renderer.props.onChangeChecked).toBe("function");
           expect(renderer.props.checked).toBe(true);
-          renderer.props.onChangeChecked();
+          const event = new Event("change", { bubbles: true });
+
+          event.simulated = true;
+          renderer.props.onChangeChecked(event);
+          await new Promise(resolve => setTimeout(() => resolve()));
           expect(spyOnChangeChecked).toHaveBeenCalledWith(
             currentEditorState,
             block
