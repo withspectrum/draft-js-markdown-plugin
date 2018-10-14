@@ -297,10 +297,17 @@ const createMarkdownPlugin = (_config = {}) => {
           return {
             component: CheckableListItem,
             props: {
-              onChangeChecked: () =>
-                setEditorState(
-                  CheckableListItemUtils.toggleChecked(getEditorState(), block)
-                ),
+              onChangeChecked: e => {
+                e.preventDefault();
+                setTimeout(() =>
+                  setEditorState(
+                    CheckableListItemUtils.toggleChecked(
+                      getEditorState(),
+                      block
+                    )
+                  )
+                );
+              },
               checked: !!block.getData().get("checked"),
             },
           };
