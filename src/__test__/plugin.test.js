@@ -13,6 +13,11 @@ import {
 import { Map, List } from "immutable";
 import createMarkdownPlugin from "../";
 
+const applyMDtoInlineStyleChange = editorState =>
+  EditorState.set(editorState, {
+    lastChangeType: "md-to-inline-style",
+  });
+
 describe("draft-js-markdown-plugin", () => {
   afterEach(() => {
     /* eslint-disable no-underscore-dangle */
@@ -474,8 +479,12 @@ describe("draft-js-markdown-plugin", () => {
         let character;
         beforeEach(() => {
           character = " ";
-          subject = () =>
-            plugin.handleBeforeInput(character, store.getEditorState(), store);
+          subject = editorState =>
+            plugin.handleBeforeInput(
+              character,
+              editorState || store.getEditorState(),
+              store
+            );
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -572,7 +581,9 @@ describe("draft-js-markdown-plugin", () => {
                 anchorOffset: 5,
               });
 
-              expect(subject()).toBe("handled");
+              expect(
+                subject(applyMDtoInlineStyleChange(store.getEditorState()))
+              ).toBe("handled");
               expect(store.setEditorState).toHaveBeenCalled();
               newEditorState = store.setEditorState.mock.calls[0][0];
               const block = newEditorState.getCurrentContent().getLastBlock();

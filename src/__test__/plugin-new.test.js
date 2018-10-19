@@ -1,10 +1,10 @@
-import Draft, {
-  EditorState,
-  SelectionState,
-  ContentBlock,
-  convertToRaw,
-} from "draft-js";
+import Draft, { EditorState, SelectionState, convertToRaw } from "draft-js";
 import createMarkdownPlugin from "../";
+
+const applyMDtoInlineStyleChange = editorState =>
+  EditorState.set(editorState, {
+    lastChangeType: "md-to-inline-style",
+  });
 
 describe("markdown", () => {
   it("should convert asteriks to bold text", () => {
@@ -76,15 +76,14 @@ describe("markdown", () => {
     );
   });
 
-  it("should not have sticky inline styles", () => {
+  it("should not unstick inline styles if they were not added by md-to-inline-style change", () => {
     const { handleBeforeInput } = createMarkdownPlugin();
-    const setEditorState = jest.fn();
     const boldInlineStyleRange = {
       length: 4,
       offset: 5,
       style: "BOLD",
     };
-    const before = EditorState.moveSelectionToEnd(
+    const editorState = EditorState.moveSelectionToEnd(
       EditorState.createWithContent(
         Draft.convertFromRaw({
           entityMap: {},
@@ -102,7 +101,39 @@ describe("markdown", () => {
         })
       )
     );
-    expect(handleBeforeInput("a", before, { setEditorState })).toEqual(
+    expect(handleBeforeInput("a", editorState, {})).toEqual("not-handled");
+  });
+
+  it("should not have sticky inline styles", () => {
+    const { handleBeforeInput } = createMarkdownPlugin();
+    const setEditorState = jest.fn();
+    const boldInlineStyleRange = {
+      length: 4,
+      offset: 5,
+      style: "BOLD",
+    };
+    const editorState = applyMDtoInlineStyleChange(
+      EditorState.moveSelectionToEnd(
+        EditorState.createWithContent(
+          Draft.convertFromRaw({
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "Some text",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [boldInlineStyleRange],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          })
+        )
+      )
+    );
+
+    expect(handleBeforeInput("a", editorState, { setEditorState })).toEqual(
       "handled"
     );
     const raw = convertToRaw(
@@ -120,34 +151,37 @@ describe("markdown", () => {
       offset: 5,
       style: "BOLD",
     };
-    const before = EditorState.moveSelectionToEnd(
-      EditorState.createWithContent(
-        Draft.convertFromRaw({
-          entityMap: {},
-          blocks: [
-            {
-              key: "item1",
-              text: "Some text",
-              type: "unstyled",
-              depth: 0,
-              inlineStyleRanges: [boldInlineStyleRange],
-              entityRanges: [],
-              data: {},
-            },
-            {
-              key: "item2",
-              text: "",
-              type: "unstyled",
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [],
-              data: {},
-            },
-          ],
-        })
+    const editorState = applyMDtoInlineStyleChange(
+      EditorState.moveSelectionToEnd(
+        EditorState.createWithContent(
+          Draft.convertFromRaw({
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "Some text",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [boldInlineStyleRange],
+                entityRanges: [],
+                data: {},
+              },
+              {
+                key: "item2",
+                text: "",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          })
+        )
       )
     );
-    expect(handleBeforeInput("a", before, { setEditorState })).toEqual(
+
+    expect(handleBeforeInput("a", editorState, { setEditorState })).toEqual(
       "handled"
     );
     const raw = convertToRaw(
