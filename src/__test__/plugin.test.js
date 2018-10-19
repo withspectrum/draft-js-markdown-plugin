@@ -3,6 +3,7 @@ import {
   CheckableListItem,
   CheckableListItemUtils,
 } from "draft-js-checkable-list-item";
+import { applyMDtoInlineStyleChange } from "./utils";
 
 import {
   defaultInlineWhitelist,
@@ -12,11 +13,6 @@ import {
 
 import { Map, List } from "immutable";
 import createMarkdownPlugin from "../";
-
-const applyMDtoInlineStyleChange = editorState =>
-  EditorState.set(editorState, {
-    lastChangeType: "md-to-inline-style",
-  });
 
 describe("draft-js-markdown-plugin", () => {
   afterEach(() => {

@@ -1,10 +1,6 @@
 import Draft, { EditorState, SelectionState, convertToRaw } from "draft-js";
 import createMarkdownPlugin from "../";
-
-const applyMDtoInlineStyleChange = editorState =>
-  EditorState.set(editorState, {
-    lastChangeType: "md-to-inline-style",
-  });
+import { applyMDtoInlineStyleChange } from "./utils";
 
 describe("markdown", () => {
   it("should convert asteriks to bold text", () => {
