@@ -61,7 +61,7 @@ const handleInlineStyle = (
     newEditorState = EditorState.push(
       newEditorState,
       newContentState,
-      "change-inline-style"
+      "md-to-inline-style"
     );
 
     return newEditorState;

@@ -3,6 +3,7 @@ import {
   CheckableListItem,
   CheckableListItemUtils,
 } from "draft-js-checkable-list-item";
+import { applyMDtoInlineStyleChange } from "./utils";
 
 import {
   defaultInlineWhitelist,
@@ -474,8 +475,12 @@ describe("draft-js-markdown-plugin", () => {
         let character;
         beforeEach(() => {
           character = " ";
-          subject = () =>
-            plugin.handleBeforeInput(character, store.getEditorState(), store);
+          subject = editorState =>
+            plugin.handleBeforeInput(
+              character,
+              editorState || store.getEditorState(),
+              store
+            );
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -572,7 +577,9 @@ describe("draft-js-markdown-plugin", () => {
                 anchorOffset: 5,
               });
 
-              expect(subject()).toBe("handled");
+              expect(
+                subject(applyMDtoInlineStyleChange(store.getEditorState()))
+              ).toBe("handled");
               expect(store.setEditorState).toHaveBeenCalled();
               newEditorState = store.setEditorState.mock.calls[0][0];
               const block = newEditorState.getCurrentContent().getLastBlock();
