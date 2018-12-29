@@ -106,7 +106,7 @@
     "draft-js": "^0.10.4",
     "draft-js-checkable-list-item": "^2.0.6",
     "draft-js-prism-plugin": "^0.1.3",
-    "immutable": "~3.7.4",
+    "immutable": "^3.8.2",
     "react-click-outside": "^3.0.1"
   }
 }
