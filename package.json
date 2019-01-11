@@ -80,7 +80,7 @@
     "react": "16.2.x",
     "react-addons-pure-render-mixin": "^15.6.2",
     "react-addons-test-utils": "^15.6.2",
-    "react-dom": "16.2.0",
+    "react-dom": "16.2.1",
     "react-github-corner": "^2.3.0",
     "react-github-fork-ribbon": "^0.4.4",
     "react-test-renderer": "^16.6.0",
