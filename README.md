@@ -138,7 +138,7 @@ features = {
 
 #### Example:
 
-```
+```js
 // this will only enable BOLD for inline and CODE
 // as well as header-one for blocks
 const features = {
