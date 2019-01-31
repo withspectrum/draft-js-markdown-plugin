@@ -205,9 +205,6 @@ function checkReturnForState(config, editorState, ev) {
 const unstickyInlineStyles = (character, editorState) => {
   const selection = editorState.getSelection();
   if (!selection.isCollapsed()) return editorState;
-  if (editorState.getLastChangeType() !== "md-to-inline-style") {
-    return editorState;
-  }
 
   const startOffset = selection.getStartOffset();
   const content = editorState.getCurrentContent();
@@ -225,6 +222,9 @@ const unstickyInlineStyles = (character, editorState) => {
     );
     if (previousBlockStyle.size === 0) return editorState;
   } else {
+    if (editorState.getLastChangeType() !== "md-to-inline-style") {
+      return editorState;
+    }
     const style = block.getInlineStyleAt(startOffset - 1);
     if (style.size === 0) return editorState;
   }
