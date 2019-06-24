@@ -23,15 +23,19 @@ const headerReg = /^(#+)\s+/;
 
 const handleBlockType = (whiteList, editorState, character) => {
   const currentSelection = editorState.getSelection();
-  const key = currentSelection.getStartKey();
-  const text = editorState
-    .getCurrentContent()
-    .getBlockForKey(key)
-    .getText();
-  const position = currentSelection.getAnchorOffset();
-  const line = [text.slice(0, position), character, text.slice(position)].join(
-    ""
-  );
+  const currentContent = editorState.getCurrentContent();
+  const startKey = currentSelection.getStartKey();
+  const endKey = currentSelection.getEndKey();
+  const startOffset = currentSelection.getStartOffset();
+  const endOffset = currentSelection.getEndOffset();
+  const startText = currentContent.getBlockForKey(startKey).getText();
+  const endText = currentContent.getBlockForKey(endKey).getText();
+  const line = [
+    startText.slice(0, startOffset),
+    character,
+    endText.slice(endOffset),
+  ].join("");
+
   const blockType = RichUtils.getCurrentBlockType(editorState);
 
   const headerMatch = line.match(headerReg);

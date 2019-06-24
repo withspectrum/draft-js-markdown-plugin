@@ -1,4 +1,4 @@
-import { EditorState } from "draft-js";
+import { EditorState, CharacterMetadata } from "draft-js";
 
 const changeCurrentBlockType = (
   editorState,
@@ -8,23 +8,47 @@ const changeCurrentBlockType = (
 ) => {
   const currentContent = editorState.getCurrentContent();
   let selection = editorState.getSelection();
-  const key = selection.getStartKey();
-  const blockMap = currentContent.getBlockMap();
-  const block = blockMap.get(key);
-  const data = block.getData().merge(blockMetadata);
-  const newBlock = block.merge({ type, data, text: text });
+  const startKey = selection.getStartKey();
+  const endKey = selection.getEndKey();
+  var blockMap = currentContent.getBlockMap();
+  const startBlock = blockMap.get(startKey);
+  const endBlock = blockMap.get(endKey);
+  if (startKey !== endKey) {
+    // blocks after the startKey should be removed
+    var currentKey = startKey;
+    const keysToRemove = [];
+    do {
+      currentKey = currentContent.getKeyAfter(currentKey);
+      keysToRemove.push(currentKey);
+    } while (currentKey !== endKey);
+    keysToRemove.forEach(key => (blockMap = blockMap.delete(key)));
+  }
+  const data = startBlock.getData().merge(blockMetadata);
+  const characterList = [];
+  for (var i = 0; i < text.length; ++i) {
+    // it seems that current API can not make me figure out the correct
+    // CharacterMetadata for each character in the text
+    characterList.push(CharacterMetadata.create());
+  }
+  const newBlock = startBlock.merge({ type, data, text, characterList });
 
-  const lastOffset = text.length;
-
-  if (selection.getFocusOffset() > lastOffset) {
-    selection = selection.merge({
-      anchorOffset: lastOffset,
-      focusOffset: lastOffset,
-    });
+  // It seems that there is no way to get the right selectionAfter.
+  // Use the same trivial solution as the old version
+  const startOffset = selection.getStartOffset();
+  var afterOffset = text.length;
+  if (startOffset < afterOffset) {
+    afterOffset = startOffset;
   }
 
+  selection = selection.merge({
+    anchorKey: startKey,
+    focusKey: startKey,
+    anchorOffset: afterOffset,
+    focusOffset: afterOffset,
+  });
+
   const newContentState = currentContent.merge({
-    blockMap: blockMap.set(key, newBlock),
+    blockMap: blockMap.set(startKey, newBlock),
     selectionAfter: selection,
   });
 
