@@ -1,0 +1,5 @@
+LICENSE
+node_modules
+.*
+*.gif
+*.lock
