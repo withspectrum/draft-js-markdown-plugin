@@ -1,0 +1,7 @@
+LICENSE
+node_modules
+.*
+*.gif
+*.lock
+*.log
+*.snap

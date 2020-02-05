@@ -343,6 +343,7 @@ const createMarkdownPlugin = (_config = {}) => {
       }
       return "not-handled";
     },
+    // oddly handleReturn does not get the event timestamp
     handleReturn(ev, editorState, { setEditorState }) {
       if (inLink(editorState)) return "not-handled";
 
@@ -381,7 +382,12 @@ const createMarkdownPlugin = (_config = {}) => {
 
       return "not-handled";
     },
-    handleBeforeInput(character, editorState, { setEditorState }) {
+    handleBeforeInput(
+      character,
+      editorState,
+      eventTimestamp,
+      { setEditorState }
+    ) {
       // If we're in a code block - don't transform markdown
       if (inCodeBlock(editorState)) return "not-handled";
 

@@ -5,7 +5,6 @@ script:
   - node --version
   - yarn --version
   - yarn run test
-  - yarn run flow
 cache:
   yarn: true
   directories:
