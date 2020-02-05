@@ -17,16 +17,15 @@ An opinionated [DraftJS] plugin for supporting Markdown syntax shortcuts in Draf
 
 ```sh
 npm i --save draft-js-markdown-plugin
-# add any required peerDependencies
 ```
 
 ## Usage
 
 ```js
-import React, { Component } from "react";
-import Editor from "draft-js-plugins-editor";
-import createMarkdownPlugin from "draft-js-markdown-plugin";
-import { EditorState } from "draft-js";
+import React, { Component } from 'react';
+import Editor from 'draft-js-plugins-editor';
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
+import { EditorState } from 'draft-js';
 
 export default class DemoEditor extends Component {
   state = {
@@ -121,7 +120,7 @@ Dictionary for languages available to code block switcher
 
 ```js
 const languages = {
-  js: "JavaScript",
+  js: 'JavaScript',
 };
 
 const markdownPlugin = createMarkdownPlugin({ languages });
@@ -144,8 +143,8 @@ features = {
 // this will only enable BOLD for inline and CODE
 // as well as header-one for blocks
 const features = {
-  inline: ["BOLD"],
-  block: ["CODE", "header-one"],
+  inline: ['BOLD'],
+  block: ['CODE', 'header-one'],
 };
 const plugin = createMarkdownPlugin({ features });
 ```
@@ -153,27 +152,27 @@ const plugin = createMarkdownPlugin({ features });
 _Available Inline features_:
 
 ```js
-["BOLD", "ITALIC", "CODE", "STRIKETHROUGH", "LINK", "IMAGE"];
+['BOLD', 'ITALIC', 'CODE', 'STRIKETHROUGH', 'LINK', 'IMAGE'];
 ```
 
 _Available Block features_:
 
 ```js
-import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item";
+import { CHECKABLE_LIST_ITEM } from 'draft-js-checkable-list-item';
 [
-  "CODE",
-  "header-one",
-  "header-two",
-  "header-three",
-  "header-four",
-  "header-five",
-  "header-six",
-  "ordered-list-item",
-  "unordered-list-item",
+  'CODE',
+  'header-one',
+  'header-two',
+  'header-three',
+  'header-four',
+  'header-five',
+  'header-six',
+  'ordered-list-item',
+  'unordered-list-item',
   // CHECKABLE_LIST_ITEM is a constant from 'draft-js-checkable-list-item'
   // see import statementabove
   CHECKABLE_LIST_ITEM,
-  "blockquote",
+  'blockquote',
 ];
 ```
 
@@ -184,12 +183,12 @@ To interoperate this plugin with other DraftJS plugins, i.e. [`draft-js-plugins`
 #### Example:
 
 ```js
-import createMarkdownPlugin from "draft-js-markdown-plugin";
-import createFocusPlugin from "draft-js-focus-plugin";
-import createImagePlugin from "draft-js-image-plugin";
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
+import createFocusPlugin from 'draft-js-focus-plugin';
+import createImagePlugin from 'draft-js-image-plugin';
 
 const entityType = {
-  IMAGE: "IMAGE",
+  IMAGE: 'IMAGE',
 };
 
 const focusPlugin = createFocusPlugin();
