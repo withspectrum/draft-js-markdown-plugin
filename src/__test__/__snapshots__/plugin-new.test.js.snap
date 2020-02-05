@@ -76,4 +76,27 @@ Object {
   ],
   "entityMap": Object {},
 }
-`
+`;
+
+exports[`markdown should work with Draft v11 syntax 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [
+        Object {
+          "length": 4,
+          "offset": 5,
+          "style": "BOLD",
+        },
+      ],
+      "key": "item1",
+      "text": "Some text",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {},
+}
+`;

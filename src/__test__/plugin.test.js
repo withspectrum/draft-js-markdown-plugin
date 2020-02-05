@@ -479,6 +479,7 @@ describe("draft-js-markdown-plugin", () => {
             plugin.handleBeforeInput(
               character,
               editorState || store.getEditorState(),
+              new Date().getTime(),
               store
             );
           currentRawContentState = {

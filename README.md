@@ -1,38 +1,40 @@
-draft-js-markdown-plugin
-==================================
+# draft-js-markdown-plugin
 
 [![Build Status](https://travis-ci.org/withspectrum/draft-js-markdown-plugin.svg?branch=master)](https://travis-ci.org/withspectrum/draft-js-markdown-plugin)
 [![npm](https://img.shields.io/npm/v/draft-js-markdown-plugin.svg)][npm]
+
 <!-- [![Coverage Status](https://coveralls.io/repos/github/withspectrum/draft-js-markdown-plugin/badge.svg?branch=master)](https://coveralls.io/github/withspectrum/draft-js-markdown-plugin?branch=master) -->
+
+**IMPORTANT** The current version of `draft-js-markdown-plugin` is updated to work with DraftJS @ `^0.11.0`. Please ensure you've satisfied your peer dependencies in npm/yarn to avoid problems!
 
 An opinionated [DraftJS] plugin for supporting Markdown syntax shortcuts in DraftJS. This plugin works with [DraftJS Plugins], and is a fork of the excellent [`draft-js-markdown-shortcuts-plugin`](https://github.com/ngs/draft-js-markdown-shortcuts-plugin) by [@ngs](https://github.com/ngs). (see [why fork that plugin](#why-fork-the-markdown-shortcuts-plugin) for more info)
 
 ![screen](screen.gif)
 
-[View Demo][Demo]
+[View Demo][demo]
 
 ## Installation
 
 ```sh
 npm i --save draft-js-markdown-plugin
+# add any required peerDependencies
 ```
 
 ## Usage
 
 ```js
-import React, { Component } from 'react';
-import Editor from 'draft-js-plugins-editor';
-import createMarkdownPlugin from 'draft-js-markdown-plugin';
-import { EditorState } from 'draft-js';
+import React, { Component } from "react";
+import Editor from "draft-js-plugins-editor";
+import createMarkdownPlugin from "draft-js-markdown-plugin";
+import { EditorState } from "draft-js";
 
 export default class DemoEditor extends Component {
-
   state = {
     editorState: EditorState.createEmpty(),
-    plugins: [createMarkdownPlugin()]
+    plugins: [createMarkdownPlugin()],
   };
 
-  onChange = (editorState) => {
+  onChange = editorState => {
     this.setState({
       editorState,
     });
@@ -62,7 +64,7 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 class Editor extends Component {
   state = {
     plugins: [
-      // Add the Prism plugin to the plugins array 
+      // Add the Prism plugin to the plugins array
       createPrismPlugin({
         prism: Prism
       }),
@@ -91,7 +93,7 @@ renderLanguageSelect = ({
 }) => React.Node
 ```
 
-Code blocks render a select to switch syntax highlighting - `renderLanguageSelect` is a render function that lets you override how this is rendered. 
+Code blocks render a select to switch syntax highlighting - `renderLanguageSelect` is a render function that lets you override how this is rendered.
 
 #### Example:
 
@@ -119,10 +121,10 @@ Dictionary for languages available to code block switcher
 
 ```js
 const languages = {
-  js: 'JavaScript'
-}
+  js: "JavaScript",
+};
 
-const markdownPlugin = createMarkdownPlugin({ languages })
+const markdownPlugin = createMarkdownPlugin({ languages });
 ```
 
 ### `features`
@@ -142,44 +144,37 @@ features = {
 // this will only enable BOLD for inline and CODE
 // as well as header-one for blocks
 const features = {
-  inline: ['BOLD'],
-  block: ['CODE', 'header-one'],
-}
-const plugin = createMarkdownPlugin({ features })
+  inline: ["BOLD"],
+  block: ["CODE", "header-one"],
+};
+const plugin = createMarkdownPlugin({ features });
 ```
 
-*Available Inline features*:
+_Available Inline features_:
 
 ```js
-[
-  'BOLD',
-  'ITALIC',
-  'CODE',
-  'STRIKETHROUGH',
-  'LINK',
-  'IMAGE'
-]
+["BOLD", "ITALIC", "CODE", "STRIKETHROUGH", "LINK", "IMAGE"];
 ```
 
-*Available Block features*:
+_Available Block features_:
 
 ```js
-import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item"
+import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item";
 [
-  'CODE',
-  'header-one',
-  'header-two',
-  'header-three',
-  'header-four',
-  'header-five',
-  'header-six',
-  'ordered-list-item',
-  'unordered-list-item',
+  "CODE",
+  "header-one",
+  "header-two",
+  "header-three",
+  "header-four",
+  "header-five",
+  "header-six",
+  "ordered-list-item",
+  "unordered-list-item",
   // CHECKABLE_LIST_ITEM is a constant from 'draft-js-checkable-list-item'
   // see import statementabove
   CHECKABLE_LIST_ITEM,
-  'blockquote',
-]
+  "blockquote",
+];
 ```
 
 ### `entityType`
@@ -209,7 +204,7 @@ const editorPlugins = [focusPlugin, imagePlugin, markdownPlugin];
 
 ## Why fork the `markdown-shortcuts-plugin`?
 
-Writing is a core part of our app, and while the `markdown-shortcuts-plugin` is awesome and battle-tested there are a few opinionated things we wanted to do differently. Rather than bother [@ngs](https://github.com/ngs) with tons of PRs, we figured it'd be better to own that core part of our experience fully. 
+Writing is a core part of our app, and while the `markdown-shortcuts-plugin` is awesome and battle-tested there are a few opinionated things we wanted to do differently. Rather than bother [@ngs](https://github.com/ngs) with tons of PRs, we figured it'd be better to own that core part of our experience fully.
 
 ## License
 
@@ -217,8 +212,8 @@ Licensed under the MIT license, Copyright Ⓒ 2017 Space Program Inc. This plugi
 
 See [LICENSE] for the full license text.
 
-[Demo]: https://markdown-plugin.spectrum.chat/
-[DraftJS]: https://facebook.github.io/draft-js/
-[DraftJS Plugins]: https://github.com/draft-js-plugins/draft-js-plugins
-[LICENSE]: ./LICENSE
+[demo]: https://markdown-plugin.spectrum.chat/
+[draftjs]: https://facebook.github.io/draft-js/
+[draftjs plugins]: https://github.com/draft-js-plugins/draft-js-plugins
+[license]: ./LICENSE
 [npm]: https://www.npmjs.com/package/draft-js-markdown-plugin
